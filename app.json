@@ -1,0 +1,58 @@
+{
+  "expo": {
+    "name": "Checkpoint",
+    "slug": "checkpoint",
+    "version": "0.1.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "scheme": "checkpoint",
+    "userInterfaceStyle": "automatic",
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "space.checkpoint.app",
+      "infoPlist": {
+        "NSLocationWhenInUseUsageDescription": "Checkpoint uses your location to mark your check-ins on the map.",
+        "NSCameraUsageDescription": "Checkpoint uses your camera to take check-in photos.",
+        "NSPhotoLibraryUsageDescription": "Checkpoint accesses your photo library to select check-in photos."
+      },
+      "googleServicesFile": "./GoogleService-Info.plist" 
+    },
+    "android": {
+      "package": "space.checkpoint.app",
+      "adaptiveIcon": {
+        "backgroundColor": "#F05A28",
+        "foregroundImage": "./assets/android-icon-foreground.png",
+        "backgroundImage": "./assets/android-icon-background.png"
+      },
+      "permissions": [
+        "ACCESS_FINE_LOCATION",
+        "ACCESS_COARSE_LOCATION",
+        "CAMERA",
+        "READ_EXTERNAL_STORAGE"
+      ],
+      "googleServicesFile": "./google-services.json"
+    },
+    "web": {
+      "favicon": "./assets/favicon.png",
+      "bundler": "metro"
+    },
+    "plugins": [
+      "expo-router",
+      "expo-secure-store",
+      "expo-image",
+      "expo-sharing",
+      "expo-web-browser",
+      "expo-localization",
+      "@maplibre/maplibre-react-native",
+      [
+        "expo-build-properties",
+        {
+          "ios": {
+            "useFrameworks": "static"
+          }
+        }
+      ],
+      "@react-native-firebase/app"
+    ]
+  }
+}
