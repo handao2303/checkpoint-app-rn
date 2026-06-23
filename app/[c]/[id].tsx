@@ -17,6 +17,8 @@ import { UserAvatar } from "../../src/components/ui/UserAvatar";
 import { DetailSheetSkeleton } from "../../src/components/ui/Skeleton";
 import { ReactionBar } from "../../src/components/ReactionBar";
 import { CommentSection } from "../../src/components/CommentSection";
+import { MediaPreview, useMediaPreview, type MediaItem } from "../../src/components/MediaPreview";
+import { EditCheckpointSheet } from "../../src/components/EditCheckpointSheet";
 import { shareLink } from "../../src/lib/share";
 
 export default function CheckpointDetailScreen() {
@@ -26,6 +28,8 @@ export default function CheckpointDetailScreen() {
   const insets = useSafeAreaInsets();
   const { user } = useAuth();
   const qc = useQueryClient();
+  const lightbox = useMediaPreview();
+  const [editing, setEditing] = useState(false);
 
   const { data, isLoading } = useQuery({
     queryKey: ["checkpoint", id],
@@ -79,7 +83,7 @@ export default function CheckpointDetailScreen() {
       {/* Images */}
       {data.images.length > 0 && (
         <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-          {data.images.map((img) => (
+          {data.images.map((img, idx) => (
             <View key={img.id} style={styles.imageContainer}>
               {img.pending ? (
                 <View style={[styles.image, { alignItems: "center", justifyContent: "center" }]}>
@@ -87,7 +91,23 @@ export default function CheckpointDetailScreen() {
                   <Text style={{ fontSize: 12, color: colors.neutral[500], marginTop: 4 }}>{t("checkin.processingImage")}</Text>
                 </View>
               ) : (
-                <Image source={{ uri: img.thumbnail_url || img.url }} style={styles.image} resizeMode="cover" />
+                <TouchableOpacity
+                  activeOpacity={0.9}
+                  onPress={() =>
+                    lightbox.open(
+                      data.images
+                        .filter((m) => !m.pending)
+                        .map<MediaItem>((m) => ({
+                          url: m.url,
+                          thumbnailUrl: m.thumbnail_url,
+                          mediaType: m.type === "video" ? "video" : "image",
+                        })),
+                      idx,
+                    )
+                  }
+                >
+                  <Image source={{ uri: img.thumbnail_url || img.url }} style={styles.image} resizeMode="cover" />
+                </TouchableOpacity>
               )}
             </View>
           ))}
@@ -142,11 +162,21 @@ export default function CheckpointDetailScreen() {
           {t("common.share")}
         </Button>
         {isMine && (
+          <Button variant="outline" onPress={() => setEditing(true)}>
+            {t("checkin.editTitle")}
+          </Button>
+        )}
+        {isMine && (
           <Button variant="outline" onPress={handleDelete}>
             {t("common.delete")}
           </Button>
         )}
       </View>
+
+      <MediaPreview {...lightbox.props} />
+      {isMine && (
+        <EditCheckpointSheet visible={editing} onClose={() => setEditing(false)} checkpoint={data} />
+      )}
     </ScrollView>
   );
 }

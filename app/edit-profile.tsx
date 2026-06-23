@@ -16,6 +16,10 @@ import { colors } from "../src/theme/tokens";
 import { Button } from "../src/components/ui/Button";
 import { Card } from "../src/components/ui/Card";
 import { UserAvatar } from "../src/components/ui/UserAvatar";
+import { AvatarFramePicker } from "../src/components/AvatarFramePicker";
+import { buildPickerFrames } from "../src/lib/avatarFrames";
+import { useQuery } from "@tanstack/react-query";
+import { getBadges } from "../src/lib/api";
 
 export default function EditProfileScreen() {
   const { t } = useTranslation();
@@ -27,6 +31,13 @@ export default function EditProfileScreen() {
   const [username, setUsername] = useState(user?.username ?? "");
   const [avatarUri, setAvatarUri] = useState<string | null>(null);
   const [usernameAvailable, setUsernameAvailable] = useState<boolean | null>(null);
+  const [frame, setFrame] = useState<string | null>((user as any)?.avatar_frame ?? null);
+
+  const { data: badges = [] } = useQuery({ queryKey: ["badges"], queryFn: () => getBadges(), enabled: !!user });
+  const frameOptions = buildPickerFrames(
+    user?.level ?? 1,
+    new Set(badges.filter((b) => b.awarded).map((b) => b.key)),
+  );
 
   const pickAvatar = async () => {
     const result = await ImagePicker.launchImageLibraryAsync({
@@ -69,11 +80,13 @@ export default function EditProfileScreen() {
       }
 
       // Update profile
-      if (displayName !== user?.display_name || bio !== user?.bio || username !== user?.username) {
+      const frameChanged = frame !== ((user as any)?.avatar_frame ?? null);
+      if (displayName !== user?.display_name || bio !== user?.bio || username !== user?.username || frameChanged) {
         const updated = await updateProfile({
           display_name: displayName || undefined,
           bio: bio || undefined,
           username: username !== user?.username ? username : undefined,
+          avatar_frame: frameChanged ? frame : undefined,
         });
 
         // Re-commit user state
@@ -108,7 +121,7 @@ export default function EditProfileScreen() {
           {avatarUri ? (
             <Image source={{ uri: avatarUri }} style={styles.avatar} />
           ) : (
-            <UserAvatar url={user.avatar_url} name={user.display_name} size={96} />
+            <UserAvatar url={user.avatar_url} name={user.display_name} size={96} frame={frame} />
           )}
         </TouchableOpacity>
         <TouchableOpacity onPress={pickAvatar} style={{ marginTop: 8 }}>
@@ -116,6 +129,15 @@ export default function EditProfileScreen() {
             {t("checkin.takePhoto")}
           </Text>
         </TouchableOpacity>
+
+        {/* Avatar frames */}
+        <Text style={[styles.label, { alignSelf: "flex-start", marginTop: 16 }]}>{t("profile.avatarFrame")}</Text>
+        <AvatarFramePicker
+          options={frameOptions}
+          selectedId={frame}
+          onSelect={setFrame}
+          avatarUrl={user.avatar_url}
+        />
       </Card>
 
       {/* Display name */}

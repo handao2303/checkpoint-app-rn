@@ -18,6 +18,7 @@ import { MapSkeleton } from "../src/components/MapSkeleton";
 import { HomeShell } from "../src/components/HomeShell";
 import { useLocationLabel } from "../src/hooks/useLocationLabel";
 import { categoryIcon } from "../src/lib/maps";
+import { useClusters } from "../src/lib/clustering";
 
 const DEBOUNCE_MS = 500;
 
@@ -83,6 +84,20 @@ export default function MapScreen() {
   const handleRegionChange = useCallback((r: Region) => {
     if (debounceRef.current) clearTimeout(debounceRef.current);
     debounceRef.current = setTimeout(() => setRegion(r), DEBOUNCE_MS);
+  }, []);
+
+  const clusterPoints = useMemo(
+    () => checkpoints.map((cp) => ({ id: cp.id, lat: cp.lat, lng: cp.lng, category: cp.category })),
+    [checkpoints],
+  );
+  const clusters = useClusters(clusterPoints, region);
+
+  const zoomToCluster = useCallback((lat: number, lng: number, expansionZoom: number) => {
+    const delta = 360 / Math.pow(2, Math.min(expansionZoom, 20));
+    mapRef.current?.animateToRegion(
+      { latitude: lat, longitude: lng, latitudeDelta: delta, longitudeDelta: delta },
+      400,
+    );
   }, []);
 
   const content = (
@@ -182,25 +197,35 @@ export default function MapScreen() {
           showsMyLocationButton
           onMapReady={() => setMapReady(true)}
         >
-          {checkpoints.map((cp) => (
-            <Marker
-              key={cp.id}
-              coordinate={{ latitude: cp.lat, longitude: cp.lng }}
-              title={cp.name}
-              description={cp.category}
-              onCalloutPress={() => router.push(`/c/${cp.id}`)}
-            >
-              <View style={styles.markerPin}>
-                <Icon name={(categoryIcon(cp.category) as IconName)} size={20} color={colors.primary[600]} />
-              </View>
-              <Callout>
-                <View style={styles.callout}>
-                  <Text style={styles.calloutTitle}>{cp.name}</Text>
-                  <Text style={styles.calloutSub}>{cp.address || cp.category}</Text>
+          {clusters.map((c) =>
+            c.type === "cluster" ? (
+              <Marker
+                key={`cluster-${c.id}`}
+                coordinate={{ latitude: c.lat, longitude: c.lng }}
+                onPress={() => zoomToCluster(c.lat, c.lng, c.expansionZoom)}
+              >
+                <View style={styles.clusterPin}>
+                  <Text style={styles.clusterText}>{c.count}</Text>
                 </View>
-              </Callout>
-            </Marker>
-          ))}
+              </Marker>
+            ) : (
+              <Marker
+                key={c.point.id}
+                coordinate={{ latitude: c.lat, longitude: c.lng }}
+                onCalloutPress={() => router.push(`/c/${c.point.id}`)}
+              >
+                <View style={styles.markerPin}>
+                  <Icon name={(categoryIcon(c.point.category ?? "") as IconName)} size={20} color={colors.primary[600]} />
+                </View>
+                <Callout>
+                  <View style={styles.callout}>
+                    <Text style={styles.calloutTitle}>{t("map.viewDetail")}</Text>
+                    <Text style={styles.calloutSub}>{c.point.category}</Text>
+                  </View>
+                </Callout>
+              </Marker>
+            ),
+          )}
         </MapView>
       </View>
 
@@ -249,6 +274,8 @@ const styles = StyleSheet.create({
   mapContainer: { flex: 1 },
   mapHidden: { height: 0, overflow: "hidden" },
   markerPin: { backgroundColor: "#fff", padding: 4, borderRadius: 16, borderWidth: 2, borderColor: colors.primary[300] },
+  clusterPin: { backgroundColor: colors.primary[500], minWidth: 36, height: 36, paddingHorizontal: 8, borderRadius: 18, alignItems: "center", justifyContent: "center", borderWidth: 2, borderColor: "#fff" },
+  clusterText: { color: "#fff", fontWeight: "700", fontSize: 13 },
   callout: { padding: 4, minWidth: 100 },
   calloutTitle: { fontWeight: "600", fontSize: 13 },
   calloutSub: { fontSize: 11, color: colors.neutral[500] },

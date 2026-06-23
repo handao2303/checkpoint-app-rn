@@ -9,8 +9,7 @@ import { useRouter } from "expo-router";
 import { useAuth } from "../src/hooks/useAuth";
 import { authService } from "../src/services/auth";
 import {
-  getMyCheckpoints, getPassport, getBadges, getLeaderboard,
-  type Checkpoint, type Passport, type UserBadge,
+  getMyCheckpoints, getBadges,
 } from "../src/lib/api";
 import { colors } from "../src/theme/tokens";
 import { Card } from "../src/components/ui/Card";
@@ -18,22 +17,21 @@ import { UserAvatar } from "../src/components/ui/UserAvatar";
 import { Button } from "../src/components/ui/Button";
 import { Skeleton } from "../src/components/ui/Skeleton";
 import { HomeShell } from "../src/components/HomeShell";
+import { PassportSection } from "../src/components/PassportSection";
+import { JourneysSection } from "../src/components/JourneysSection";
+import { FollowListSheet } from "../src/components/FollowListSheet";
+import { UpgradeBanner } from "../src/components/UpgradeBanner";
 
 export default function ProfileScreen() {
   const { t } = useTranslation();
   const router = useRouter();
   const { user } = useAuth();
   const qc = useQueryClient();
+  const [followSheet, setFollowSheet] = useState<null | "followers" | "following">(null);
 
   const { data: checkpoints = [], isLoading: cpLoading } = useQuery({
     queryKey: ["my-checkpoints"],
     queryFn: () => getMyCheckpoints(30),
-    enabled: !!user,
-  });
-
-  const { data: passport } = useQuery({
-    queryKey: ["passport"],
-    queryFn: () => getPassport(),
     enabled: !!user,
   });
 
@@ -72,10 +70,12 @@ export default function ProfileScreen() {
       contentContainerStyle={{ padding: 16, gap: 16 }}
       refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
     >
+      <UpgradeBanner />
+
       {/* Hero */}
       <Card>
         <View style={{ alignItems: "center", gap: 8 }}>
-          <UserAvatar url={user.avatar_url} name={user.display_name} size={80} />
+          <UserAvatar url={user.avatar_url} name={user.display_name} size={80} frame={(user as any).avatar_frame} />
           <Text style={styles.name}>{user.display_name || user.username}</Text>
           <Text style={styles.username}>@{user.username}</Text>
           {user.bio && <Text style={styles.bio}>{user.bio}</Text>}
@@ -101,6 +101,16 @@ export default function ProfileScreen() {
             <StatItem label={t("profile.checkpointCountLabel")} value={String(user.checkpoint_count)} />
             <StatItem label={t("profile.journeyCountLabel")} value={String(user.journey_count)} />
           </View>
+
+          {/* Followers / Following */}
+          <View style={styles.statsRow}>
+            <TouchableOpacity onPress={() => setFollowSheet("followers")}>
+              <StatItem label={t("profile.followers")} value={String((user as any).follower_count ?? 0)} />
+            </TouchableOpacity>
+            <TouchableOpacity onPress={() => setFollowSheet("following")}>
+              <StatItem label={t("profile.following")} value={String((user as any).following_count ?? 0)} />
+            </TouchableOpacity>
+          </View>
         </View>
 
         <View style={{ flexDirection: "row", gap: 8, marginTop: 12 }}>
@@ -120,21 +130,10 @@ export default function ProfileScreen() {
       </Card>
 
       {/* Passport */}
-      {passport && (
-        <Card>
-          <Text style={styles.sectionTitle}>{t("profile.badgesLabel")} — Passport</Text>
-          <Text style={{ color: colors.neutral[500], marginBottom: 8 }}>
-            {passport.province_count} provinces
-          </Text>
-          <View style={{ flexDirection: "row", flexWrap: "wrap", gap: 6 }}>
-            {passport.stamps.slice(0, 10).map((s) => (
-              <View key={s.province} style={styles.stamp}>
-                <Text style={styles.stampText}>{s.province}</Text>
-              </View>
-            ))}
-          </View>
-        </Card>
-      )}
+      <PassportSection />
+
+      {/* Journeys */}
+      <JourneysSection />
 
       {/* Badges */}
       <Card>
@@ -201,6 +200,12 @@ export default function ProfileScreen() {
         {t("profile.logout")}
       </Button>
     </ScrollView>
+    <FollowListSheet
+      visible={followSheet !== null}
+      onClose={() => setFollowSheet(null)}
+      userId={user.id}
+      initialTab={followSheet ?? "followers"}
+    />
     </HomeShell>
   );
 }

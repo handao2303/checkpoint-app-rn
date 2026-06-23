@@ -4,13 +4,14 @@ import { useQuery } from "@tanstack/react-query";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useTranslation } from "react-i18next";
-import { getUserProfile, getUserCheckpoints, getUserPassport, followUser, unfollowUser, getFollowing } from "../../src/lib/api";
+import { getUserProfile, getUserCheckpoints, followUser, unfollowUser, getFollowing } from "../../src/lib/api";
 import { useAuth } from "../../src/hooks/useAuth";
 import { colors } from "../../src/theme/tokens";
 import { Card } from "../../src/components/ui/Card";
 import { UserAvatar } from "../../src/components/ui/UserAvatar";
 import { Button } from "../../src/components/ui/Button";
 import { DetailSheetSkeleton } from "../../src/components/ui/Skeleton";
+import { PassportSection } from "../../src/components/PassportSection";
 
 export default function PublicProfileScreen() {
   const { username } = useLocalSearchParams<{ username: string }>();
@@ -29,12 +30,6 @@ export default function PublicProfileScreen() {
     queryKey: ["user-checkpoints", profile?.id],
     queryFn: () => getUserCheckpoints(profile!.id, 30),
     enabled: !!profile?.id,
-  });
-
-  const { data: passport } = useQuery({
-    queryKey: ["user-passport", profile?.id],
-    queryFn: () => getUserPassport(username!),
-    enabled: !!username,
   });
 
   const { data: following = [], refetch: refetchFollow } = useQuery({
@@ -64,7 +59,7 @@ export default function PublicProfileScreen() {
       {/* Hero */}
       <Card>
         <View style={{ alignItems: "center", gap: 8 }}>
-          <UserAvatar url={profile.avatar_url} name={profile.display_name} size={80} />
+          <UserAvatar url={profile.avatar_url} name={profile.display_name} size={80} frame={(profile as any).avatar_frame} />
           <Text style={styles.name}>{profile.display_name || profile.username}</Text>
           <Text style={styles.username}>@{profile.username}</Text>
           {profile.bio && <Text style={styles.bio}>{profile.bio}</Text>}
@@ -78,25 +73,14 @@ export default function PublicProfileScreen() {
               variant={isFollowing ? "outline" : "primary"}
               onPress={toggleFollow}
             >
-              {isFollowing ? t("common.following") : "Follow"}
+              {isFollowing ? t("common.following") : t("profile.follow")}
             </Button>
           )}
         </View>
       </Card>
 
       {/* Passport */}
-      {passport && passport.stamps.length > 0 && (
-        <Card>
-          <Text style={styles.sectionTitle}>{t("profile.badgesLabel")} — Passport</Text>
-          <View style={{ flexDirection: "row", flexWrap: "wrap", gap: 6 }}>
-            {passport.stamps.slice(0, 8).map((s) => (
-              <View key={s.province} style={styles.stamp}>
-                <Text style={styles.stampText}>{s.province}</Text>
-              </View>
-            ))}
-          </View>
-        </Card>
-      )}
+      <PassportSection userId={profile.id} />
 
       {/* Checkpoints gallery */}
       {checkpoints.length > 0 && (

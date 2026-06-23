@@ -8,6 +8,7 @@ import { useAuth } from "../src/hooks/useAuth";
 import { authService } from "../src/services/auth";
 import { quickCheckinSettings } from "../src/lib/settings";
 import { colors } from "../src/theme/tokens";
+import { useTheme, type ThemePreference } from "../src/theme/ThemeProvider";
 import { Card } from "../src/components/ui/Card";
 import { Button } from "../src/components/ui/Button";
 
@@ -16,8 +17,10 @@ export default function SettingsScreen() {
   const router = useRouter();
   const insets = useSafeAreaInsets();
   const { user } = useAuth();
+  const { preference, setPreference } = useTheme();
 
   const currentLang = i18n.language === "vi" ? "vi" : "en";
+  const themeOptions: ThemePreference[] = ["system", "light", "dark"];
 
   const toggleLang = () => {
     const next = currentLang === "vi" ? "en" : "vi";
@@ -88,6 +91,32 @@ export default function SettingsScreen() {
         </TouchableOpacity>
       </Card>
 
+      {/* Appearance / theme */}
+      <Card>
+        <Text style={styles.sectionTitle}>{t("profile.appearance")}</Text>
+        <View style={{ flexDirection: "row", gap: 8 }}>
+          {themeOptions.map((opt) => (
+            <TouchableOpacity
+              key={opt}
+              onPress={() => setPreference(opt)}
+              style={[
+                styles.themeChip,
+                preference === opt && { borderColor: colors.primary[500], backgroundColor: colors.primary[50] },
+              ]}
+            >
+              <Text
+                style={[
+                  styles.themeChipText,
+                  preference === opt && { color: colors.primary[600], fontWeight: "700" },
+                ]}
+              >
+                {t(`profile.theme_${opt}`)}
+              </Text>
+            </TouchableOpacity>
+          ))}
+        </View>
+      </Card>
+
       {/* Integrations */}
       <Card>
         <Text style={styles.sectionTitle}>Integrations</Text>
@@ -137,4 +166,9 @@ const styles = StyleSheet.create({
   settingDesc: { fontSize: 12, color: colors.neutral[400], marginTop: 2 },
   divider: { height: 1, backgroundColor: colors.neutral[100], marginVertical: 4 },
   langValue: { fontSize: 15, color: colors.primary[500], fontWeight: "600" },
+  themeChip: {
+    flex: 1, alignItems: "center", paddingVertical: 10, borderRadius: 12,
+    borderWidth: 1.5, borderColor: colors.neutral[200], backgroundColor: colors.neutral[0],
+  },
+  themeChipText: { fontSize: 14, color: colors.neutral[600] },
 });

@@ -21,7 +21,10 @@
     "upgradeAccount": "Upgrade account",
     "upgradeDescription": "Link email to keep your data across devices",
     "guest": "Guest",
-    "usernamePlaceholder": "Username or email"
+    "usernamePlaceholder": "Username or email",
+    "upgradeBannerTitle": "You're browsing as a guest",
+    "upgradeBannerSubtitle": "Create an account to keep your check-ins safe across devices.",
+    "upgradeBannerCta": "Create account"
   },
   "profile": {
     "title": "Profile",
@@ -53,7 +56,26 @@
     "followers": "Followers",
     "following": "Following",
     "noFollowers": "No followers yet.",
-    "noCheckpoints": "No checkpoints yet."
+    "noFollowing": "Not following anyone yet. Tap follow to see them here.",
+    "follow": "Follow",
+    "unfollow": "Following",
+    "noCheckpoints": "No checkpoints yet.",
+    "frames": {
+      "none": "No frame",
+      "level": "Level {{level}}",
+      "firstStep": "First Step",
+      "explorer": "Explorer",
+      "country": "Around the country",
+      "nightOwl": "Night Owl",
+      "traveler": "Traveler",
+      "leaderboard": "Leaderboard frame",
+      "locked": "{{label}} (locked)"
+    },
+    "appearance": "Appearance",
+    "theme_system": "System",
+    "theme_light": "Light",
+    "theme_dark": "Dark",
+    "avatarFrame": "Avatar frame"
   },
   "checkin": {
     "createCheckpoint": "Check in",
@@ -81,6 +103,10 @@
     "camera": "Camera",
     "retake": "Retake",
     "done": "Done",
+    "editTitle": "Edit check-in",
+    "save": "Save",
+    "saving": "Saving...",
+    "saveFailed": "Couldn't save changes. Please try again.",
     "nearbyPlaces": "Nearby places",
     "createNewPlace": "Create new place",
     "checkinHere": "Check in here",
@@ -94,7 +120,8 @@
     "following": "Following",
     "categories": "Categories",
     "checkinHere": "Check in here",
-    "noCheckpoints": "No checkpoints here yet"
+    "noCheckpoints": "No checkpoints here yet",
+    "viewDetail": "View detail"
   },
   "discover": {
     "title": "Discover",
@@ -122,7 +149,38 @@
     "distance": "Distance",
     "journeyName": "Journey name",
     "journeyNamePlaceholder": "My adventure",
-    "description": "Description"
+    "description": "Description",
+    "descriptionPlaceholder": "Description (optional)",
+    "sectionTitle": "Journeys",
+    "newJourney": "New journey",
+    "editJourney": "Edit journey",
+    "deleteJourney": "Delete journey",
+    "create": "Create",
+    "creating": "Creating...",
+    "save": "Save changes",
+    "saving": "Saving...",
+    "cancel": "Cancel",
+    "edit": "Edit",
+    "delete": "Delete",
+    "isActive": "Is active",
+    "stopCount": "{{count}} stops",
+    "emptyTitle": "No journeys yet",
+    "emptyHint": "Create a journey to group your moments.",
+    "assignCheckpoints": "Add moments",
+    "assignTitle": "Select moments",
+    "assign": "Add to journey",
+    "assigning": "Adding...",
+    "noCheckpoints": "No moments available",
+    "selectedCount": "{{count}} selected",
+    "deleteConfirm": "Delete \"{{title}}\"?",
+    "deleteHint": "You can delete just the journey and keep the moments, or delete everything.",
+    "detachOnly": "Delete journey only",
+    "deleteAll": "Delete with moments",
+    "deleting": "Deleting...",
+    "createError": "Couldn't create journey",
+    "saveError": "Couldn't save journey",
+    "deleteError": "Couldn't delete journey",
+    "assignError": "Couldn't add moments"
   },
   "leaderboard": {
     "title": "Leaderboard",
@@ -165,5 +223,27 @@
     "send": "Send",
     "delete": "Delete",
     "noComments": "No comments yet"
+  },
+  "passport": {
+    "title": "Passport",
+    "all": "All",
+    "collection": "Passport collection",
+    "newPlace": "New place",
+    "emptyOwnTitle": "You haven't unlocked any places yet",
+    "emptyOwnHint": "Check in somewhere new to earn a stamp.",
+    "emptyOtherTitle": "This user has no stamps yet",
+    "lockedHint": "Check in here to unlock",
+    "provinceCount": "{{count}} provinces",
+    "checkinCount": "{{count}} visits",
+    "firstVisit": "First",
+    "lastVisit": "Latest",
+    "momentsAt": "Moments at {{name}}",
+    "noPhotos": "No photos found"
+  },
+  "badge": {
+    "newBadge": "New badge{{progress}}",
+    "level": "Level {{level}}",
+    "next": "Next",
+    "awesome": "Awesome!"
   }
 }

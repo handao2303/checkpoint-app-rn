@@ -487,6 +487,7 @@ export async function updateProfile(patch: {
   display_name?: string;
   bio?: string;
   username?: string;
+  avatar_frame?: string | null;
 }): Promise<User> {
   const res = await apiFetch("/users/me", {
     method: "PATCH",

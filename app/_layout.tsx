@@ -10,6 +10,7 @@ import { loadCache } from "../src/lib/storage";
 import "../src/lib/i18n";
 import { ErrorBoundary } from "../src/components/ErrorBoundary";
 import { colors } from "../src/theme/tokens";
+import { ThemeProvider, useTheme } from "../src/theme/ThemeProvider";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -45,9 +46,10 @@ export default function RootLayout() {
     <GestureHandlerRootView style={{ flex: 1 }}>
       <SafeAreaProvider>
         <QueryClientProvider client={queryClient}>
-          <ErrorBoundary>
-            <StatusBar style="dark" />
-            <Stack screenOptions={{ headerShown: false }}>
+          <ThemeProvider>
+            <ErrorBoundary>
+              <ThemedStatusBar />
+              <Stack screenOptions={{ headerShown: false }}>
               <Stack.Screen name="index" options={{ title: "Map" }} />
               <Stack.Screen name="discover" options={{ title: "Discover" }} />
               <Stack.Screen name="create" options={{ title: "Create", presentation: "modal" }} />
@@ -66,12 +68,18 @@ export default function RootLayout() {
               <Stack.Screen name="[p]/[id]" options={{ title: "Place" }} />
               <Stack.Screen name="[j]/[id]" options={{ title: "Journey" }} />
               <Stack.Screen name="[u]/[username]" options={{ title: "Profile" }} />
-            </Stack>
-          </ErrorBoundary>
+              </Stack>
+            </ErrorBoundary>
+          </ThemeProvider>
         </QueryClientProvider>
       </SafeAreaProvider>
     </GestureHandlerRootView>
   );
+}
+
+function ThemedStatusBar() {
+  const { scheme } = useTheme();
+  return <StatusBar style={scheme === "dark" ? "light" : "dark"} />;
 }
 
 const splash = StyleSheet.create({

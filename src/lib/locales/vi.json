@@ -21,7 +21,10 @@
     "upgradeAccount": "Nâng cấp tài khoản",
     "upgradeDescription": "Liên kết email để giữ dữ liệu trên nhiều thiết bị",
     "guest": "Khách",
-    "usernamePlaceholder": "Tên đăng nhập hoặc email"
+    "usernamePlaceholder": "Tên đăng nhập hoặc email",
+    "upgradeBannerTitle": "Bạn đang dùng tư cách khách",
+    "upgradeBannerSubtitle": "Tạo tài khoản để giữ các lần check-in an toàn trên mọi thiết bị.",
+    "upgradeBannerCta": "Tạo tài khoản"
   },
   "profile": {
     "title": "Cá nhân",
@@ -53,7 +56,26 @@
     "followers": "Người theo dõi",
     "following": "Đang theo dõi",
     "noFollowers": "Chưa có người theo dõi.",
-    "noCheckpoints": "Chưa có khoảnh khắc nào."
+    "noFollowing": "Chưa theo dõi ai. Bấm theo dõi để xem họ ở đây.",
+    "follow": "Theo dõi",
+    "unfollow": "Đang theo dõi",
+    "noCheckpoints": "Chưa có khoảnh khắc nào.",
+    "frames": {
+      "none": "Không khung",
+      "level": "Cấp {{level}}",
+      "firstStep": "Bước chân đầu tiên",
+      "explorer": "Nhà thám hiểm",
+      "country": "Vòng quanh đất nước",
+      "nightOwl": "Cú đêm",
+      "traveler": "Kẻ lữ hành",
+      "leaderboard": "Cấp bảng xếp hạng",
+      "locked": "{{label}} (chưa mở khoá)"
+    },
+    "appearance": "Giao diện",
+    "theme_system": "Hệ thống",
+    "theme_light": "Sáng",
+    "theme_dark": "Tối",
+    "avatarFrame": "Khung avatar"
   },
   "checkin": {
     "createCheckpoint": "Cắm cờ",
@@ -81,6 +103,10 @@
     "camera": "Máy ảnh",
     "retake": "Chụp lại",
     "done": "Xong",
+    "editTitle": "Sửa check-in",
+    "save": "Lưu",
+    "saving": "Đang lưu...",
+    "saveFailed": "Không lưu được thay đổi. Vui lòng thử lại.",
     "nearbyPlaces": "Địa điểm gần đây",
     "createNewPlace": "Tạo địa điểm mới",
     "checkinHere": "Cắm cờ tại đây",
@@ -94,7 +120,8 @@
     "following": "Đang theo dõi",
     "categories": "Danh mục",
     "checkinHere": "Cắm cờ tại đây",
-    "noCheckpoints": "Chưa có checkpoint nào ở đây"
+    "noCheckpoints": "Chưa có checkpoint nào ở đây",
+    "viewDetail": "Xem chi tiết"
   },
   "discover": {
     "title": "Khám phá",
@@ -122,7 +149,38 @@
     "distance": "Khoảng cách",
     "journeyName": "Tên hành trình",
     "journeyNamePlaceholder": "Chuyến phiêu lưu của tôi",
-    "description": "Mô tả"
+    "description": "Mô tả",
+    "descriptionPlaceholder": "Mô tả (tuỳ chọn)",
+    "sectionTitle": "Hành trình",
+    "newJourney": "Hành trình mới",
+    "editJourney": "Sửa hành trình",
+    "deleteJourney": "Xoá hành trình",
+    "create": "Tạo",
+    "creating": "Đang tạo...",
+    "save": "Lưu thay đổi",
+    "saving": "Đang lưu...",
+    "cancel": "Huỷ",
+    "edit": "Sửa",
+    "delete": "Xoá",
+    "isActive": "Đang hoạt động",
+    "stopCount": "{{count}} điểm dừng",
+    "emptyTitle": "Chưa có hành trình",
+    "emptyHint": "Tạo hành trình để nhóm các khoảnh khắc của bạn.",
+    "assignCheckpoints": "Thêm khoảnh khắc",
+    "assignTitle": "Chọn khoảnh khắc",
+    "assign": "Thêm vào hành trình",
+    "assigning": "Đang thêm...",
+    "noCheckpoints": "Không có khoảnh khắc nào",
+    "selectedCount": "Đã chọn {{count}}",
+    "deleteConfirm": "Xoá \"{{title}}\"?",
+    "deleteHint": "Bạn có thể chỉ xoá hành trình và giữ lại các khoảnh khắc, hoặc xoá tất cả.",
+    "detachOnly": "Chỉ xoá hành trình",
+    "deleteAll": "Xoá cả khoảnh khắc",
+    "deleting": "Đang xoá...",
+    "createError": "Không tạo được hành trình",
+    "saveError": "Không lưu được hành trình",
+    "deleteError": "Không xoá được hành trình",
+    "assignError": "Không thêm được khoảnh khắc"
   },
   "leaderboard": {
     "title": "Bảng xếp hạng",
@@ -165,5 +223,27 @@
     "send": "Gửi",
     "delete": "Xoá",
     "noComments": "Chưa có bình luận"
+  },
+  "passport": {
+    "title": "Hộ chiếu",
+    "all": "Tất cả",
+    "collection": "Bộ sưu tập hộ chiếu",
+    "newPlace": "Địa điểm mới",
+    "emptyOwnTitle": "Bạn chưa mở khoá địa điểm nào",
+    "emptyOwnHint": "Hãy cắm cờ ở khu vực mới để nhận con dấu.",
+    "emptyOtherTitle": "Người dùng này chưa có con dấu nào",
+    "lockedHint": "Cắm cờ ở khu vực này để mở khoá",
+    "provinceCount": "{{count}} tỉnh thành",
+    "checkinCount": "{{count}} lần ghé",
+    "firstVisit": "Lần đầu",
+    "lastVisit": "Gần nhất",
+    "momentsAt": "Khoảnh khắc tại {{name}}",
+    "noPhotos": "Không tìm thấy ảnh chụp"
+  },
+  "badge": {
+    "newBadge": "Huy hiệu mới{{progress}}",
+    "level": "Cấp {{level}}",
+    "next": "Tiếp theo",
+    "awesome": "Tuyệt vời!"
   }
 }

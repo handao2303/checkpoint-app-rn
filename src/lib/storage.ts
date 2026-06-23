@@ -47,6 +47,7 @@ export async function loadCache(): Promise<void> {
       "cp.geo.autoAskDismissed",
       "cp.settings.openCreateOnLaunch",
       "cp.settings.preferCameraOnCheckin",
+      "cp.settings.theme",
     ];
     const pairs = await AsyncStorage.multiGet(keys);
     for (const [key, value] of pairs) {
