@@ -10,6 +10,7 @@ import { Platform } from "react-native";
 import { useAuth } from "../hooks/useAuth";
 import { colors } from "../theme/tokens";
 import { UserAvatar } from "./ui/UserAvatar";
+import { Icon, type IconName } from "./ui/Icon";
 import { Skeleton } from "./ui/Skeleton";
 import { getItem, setItem } from "../lib/storage";
 
@@ -23,14 +24,17 @@ interface NotificationItem {
   checkpoint_id?: string;
   checkpoint_name?: string;
   reaction?: string;
+  room_id?: string;
+  comment_excerpt?: string;
   created_at: Date;
 }
 
-const NOTIF_EMOJIS: Record<string, string> = {
-  comment: "💬",
-  follow: "👤",
-  reaction: "👍",
-  checkpoint: "📍",
+const NOTIF_ICONS: Record<string, IconName> = {
+  comment: "mail",
+  follow: "user-plus",
+  reaction: "heart",
+  checkpoint: "flag",
+  chat_message: "send",
 };
 
 function lastSeenKey(uid: string): string {
@@ -45,6 +49,8 @@ function mapNotif(d: any): NotificationItem {
     actor_display_name: v.actor_display_name, actor_avatar_url: v.actor_avatar_url,
     checkpoint_id: v.checkpoint_id, checkpoint_name: v.checkpoint_name,
     reaction: v.reaction,
+    room_id: v.room_id ?? undefined,
+    comment_excerpt: v.comment_excerpt ?? undefined,
     created_at: v.created_at?.toDate() ?? new Date(),
   };
 }
@@ -99,6 +105,7 @@ export function NotificationSheet({ visible, onClose }: NotificationSheetProps) 
         case "follow": return t("notification.follow");
         case "reaction": return `${item.reaction || ""} ${t("notification.reaction")}`;
         case "checkpoint": return t("notification.checkpoint");
+        case "chat_message": return t("notification.chat_message");
         default: return item.type;
       }
     })();
@@ -108,7 +115,9 @@ export function NotificationSheet({ visible, onClose }: NotificationSheetProps) 
         style={styles.notifRow}
         onPress={() => {
           onClose();
-          if (item.checkpoint_id) {
+          if (item.type === "chat_message" && item.room_id) {
+            router.push(`/chat/${item.room_id}`);
+          } else if (item.checkpoint_id) {
             router.push(`/c/${item.checkpoint_id}`);
           } else {
             router.push(`/u/${item.actor_username}`);
@@ -125,11 +134,16 @@ export function NotificationSheet({ visible, onClose }: NotificationSheetProps) 
             <Text style={styles.notifActor}>{item.actor_display_name || item.actor_username}</Text>
             {" "}{typeLabel}
           </Text>
+          {item.type === "chat_message" && item.comment_excerpt ? (
+            <Text style={styles.notifPreview} numberOfLines={1}>
+              {item.comment_excerpt}
+            </Text>
+          ) : null}
           <Text style={styles.notifTime}>
             {new Date(item.created_at).toLocaleDateString("vi-VN")}
           </Text>
         </View>
-        <Text style={{ fontSize: 20 }}>{NOTIF_EMOJIS[item.type] ?? "🔔"}</Text>
+        <Icon name={NOTIF_ICONS[item.type] ?? "bell"} size={18} color={colors.neutral[400]} />
       </TouchableOpacity>
     );
   };
@@ -183,6 +197,7 @@ const styles = StyleSheet.create({
     padding: 14, borderBottomWidth: 0.5, borderBottomColor: colors.neutral[100],
   },
   notifText: { fontSize: 14, lineHeight: 20 },
+  notifPreview: { fontSize: 12, color: colors.neutral[400], marginTop: 1 },
   notifActor: { fontWeight: "600", color: colors.neutral[800] },
   notifTime: { fontSize: 11, color: colors.neutral[400], marginTop: 2 },
 });
