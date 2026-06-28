@@ -1,5 +1,6 @@
 import React from 'react';
 import QRCode from 'react-native-qrcode-svg';
+import { API_URL } from '../lib/api';
 
 interface QRCodeDisplayProps {
   id: string;
@@ -8,9 +9,9 @@ interface QRCodeDisplayProps {
 
 export function QRCodeDisplay({ id, type = 'checkpoint' }: QRCodeDisplayProps) {
   const urls = {
-    checkpoint: `https://checkpointapp.vn/c/${id}`,
-    place: `https://checkpointapp.vn/p/${id}`,
-    journey: `https://checkpointapp.vn/j/${id}`,
+    checkpoint: `${API_URL}/share/checkpoint/${id}`,
+    place: `${API_URL}/share/place/${id}`,
+    journey: `${API_URL}/share/journey/${id}`,
   };
   return <QRCode value={urls[type]} size={160} />;
 }
