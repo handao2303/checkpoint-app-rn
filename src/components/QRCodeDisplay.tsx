@@ -1,4 +1,3 @@
-import React from 'react';
 import QRCode from 'react-native-qrcode-svg';
 import { API_URL } from '../lib/api';
 
