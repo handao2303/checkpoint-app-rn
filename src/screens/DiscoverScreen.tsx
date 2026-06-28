@@ -172,6 +172,59 @@ function EmptyState() {
   );
 }
 
+// ----- Sub-components ------------------------------------------------------
+
+function DiscoverHeader({
+  activeFilter,
+  onFilter,
+}: {
+  activeFilter: FilterKey;
+  onFilter: (key: FilterKey) => void;
+}) {
+  return (
+    <>
+      <View className="pt-14 pb-2">
+        <Text className="font-bold text-foreground text-2xl">Khám phá</Text>
+        <Text className="text-sm text-muted-foreground mt-1">Địa điểm gần bạn</Text>
+      </View>
+      <ScrollView
+        horizontal
+        showsHorizontalScrollIndicator={false}
+        contentContainerStyle={{ paddingBottom: 12, gap: 8 }}
+      >
+        {FILTER_CHIPS.map((chip) => {
+          const active = chip.key === activeFilter;
+          return (
+            <Pressable
+              key={chip.key}
+              onPress={() => onFilter(chip.key)}
+              style={{
+                borderRadius: 999,
+                paddingHorizontal: 16,
+                paddingVertical: 8,
+                borderWidth: 1,
+                borderColor: active ? '#6B5248' : '#E8DDD7',
+                backgroundColor: active ? '#6B5248' : '#FFFFFF',
+              }}
+              android_ripple={{ color: '#0000001A' }}
+            >
+              <Text
+                style={{
+                  fontSize: 14,
+                  fontWeight: '600',
+                  color: active ? '#FFFFFF' : '#3D2B1F',
+                }}
+              >
+                {chip.label}
+              </Text>
+            </Pressable>
+          );
+        })}
+      </ScrollView>
+    </>
+  );
+}
+
 // ----- Main Screen ---------------------------------------------------------
 
 export default function DiscoverScreen() {
@@ -245,58 +298,15 @@ export default function DiscoverScreen() {
     [at.lat, at.lng, navigation],
   );
 
-  const FilterHeader = (
-    <>
-      {/* Page title */}
-      <View className="pt-14 pb-2">
-        <Text className="font-bold text-foreground text-2xl">Khám phá</Text>
-        <Text className="text-sm text-muted-foreground mt-1">
-          Địa điểm gần bạn
-        </Text>
-      </View>
-
-      {/* Category filter chips */}
-      <ScrollView
-        horizontal
-        showsHorizontalScrollIndicator={false}
-        contentContainerStyle={{ paddingBottom: 12, gap: 8 }}
-      >
-        {FILTER_CHIPS.map((chip) => {
-          const active = chip.key === activeFilter;
-          return (
-            <Pressable
-              key={chip.key}
-              onPress={() => setActiveFilter(chip.key)}
-              style={{
-                borderRadius: 999,
-                paddingHorizontal: 16,
-                paddingVertical: 8,
-                borderWidth: 1,
-                borderColor: active ? '#6B5248' : '#E8DDD7',
-                backgroundColor: active ? '#6B5248' : '#FFFFFF',
-              }}
-              android_ripple={{ color: '#0000001A' }}
-            >
-              <Text
-                style={{
-                  fontSize: 14,
-                  fontWeight: '600',
-                  color: active ? '#FFFFFF' : '#3D2B1F',
-                }}
-              >
-                {chip.label}
-              </Text>
-            </Pressable>
-          );
-        })}
-      </ScrollView>
-    </>
+  const renderHeader = useCallback(
+    () => <DiscoverHeader activeFilter={activeFilter} onFilter={setActiveFilter} />,
+    [activeFilter],
   );
 
   if (isLoading) {
     return (
       <View className="flex-1 bg-surface px-4">
-        {FilterHeader}
+        <DiscoverHeader activeFilter={activeFilter} onFilter={setActiveFilter} />
         {Array.from({ length: 5 }).map((_, i) => (
           <PlaceCardSkeleton key={i} />
         ))}
@@ -310,7 +320,8 @@ export default function DiscoverScreen() {
         data={places}
         renderItem={renderItem}
         keyExtractor={(item) => item.id}
-        ListHeaderComponent={FilterHeader}
+        estimatedItemSize={88}
+        ListHeaderComponent={renderHeader}
         ListEmptyComponent={<EmptyState />}
         ListFooterComponent={
           isFetchingNextPage ? (

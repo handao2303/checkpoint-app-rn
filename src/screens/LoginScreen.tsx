@@ -10,13 +10,20 @@ import {
   TouchableOpacity,
 } from 'react-native';
 import { useTranslation } from 'react-i18next';
+import { useNavigation } from '@react-navigation/native';
+import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { useAuth } from '../auth/AuthContext';
 import { Button } from '../components/ui/Button';
 import { authErrorMessage } from '../lib/authErrors';
+import type { RootStackParamList } from '../navigation/types';
 
 export default function LoginScreen() {
   const { t } = useTranslation();
+  const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
   const { loginIdentifier, signupEmail, loginGoogle, loginAnonymous } = useAuth();
+
+  const goHome = () =>
+    navigation.reset({ index: 0, routes: [{ name: 'Tabs' }] });
 
   const [mode, setMode] = useState<'signin' | 'signup'>('signin');
   const [identifier, setIdentifier] = useState('');
@@ -34,6 +41,7 @@ export default function LoginScreen() {
       } else {
         await signupEmail(identifier, password);
       }
+      goHome();
     } catch (err) {
       setError(authErrorMessage(err));
     } finally {
@@ -46,6 +54,7 @@ export default function LoginScreen() {
     setBusy(true);
     try {
       await loginGoogle();
+      goHome();
     } catch (err) {
       setError(authErrorMessage(err));
     } finally {
@@ -58,6 +67,7 @@ export default function LoginScreen() {
     setBusy(true);
     try {
       await loginAnonymous();
+      goHome();
     } catch (err) {
       setError(authErrorMessage(err));
     } finally {
