@@ -14,7 +14,10 @@
     "ios": {
       "supportsTablet": false,
       "bundleIdentifier": "space.checkpoint.app",
-      "googleServicesFile": "./GoogleService-Info.plist"
+      "googleServicesFile": "./GoogleService-Info.plist",
+      "infoPlist": {
+        "ITSAppUsesNonExemptEncryption": false
+      }
     },
     "android": {
       "package": "space.checkpoint.app",
