@@ -64,6 +64,9 @@
         {
           "ios": {
             "useFrameworks": "static"
+          },
+          "android": {
+            "newArchEnabled": false
           }
         }
       ],
