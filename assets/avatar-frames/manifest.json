@@ -1,0 +1,336 @@
+{
+  "project": "Checkpoint Avatar Frames",
+  "formula": "level n starts at 100 * (n-1)^2 XP",
+  "badge_frames": [
+    {
+      "id": "default",
+      "file": "icons/avatar-frame-default.svg"
+    },
+    {
+      "id": "first-step",
+      "file": "icons/avatar-frame-first-step.svg"
+    },
+    {
+      "id": "explorer",
+      "file": "icons/avatar-frame-explorer.svg"
+    },
+    {
+      "id": "country",
+      "file": "icons/avatar-frame-country.svg"
+    },
+    {
+      "id": "night-owl",
+      "file": "icons/avatar-frame-night-owl.svg"
+    },
+    {
+      "id": "traveler",
+      "file": "icons/avatar-frame-traveler.svg"
+    },
+    {
+      "id": "explorer-premium",
+      "file": "icons/avatar-frame-explorer-premium.svg"
+    }
+  ],
+  "level_frames": [
+    {
+      "level": 1,
+      "min_xp": 0,
+      "tier": "Bronze",
+      "file": "icons/avatar-frame-level-01.svg"
+    },
+    {
+      "level": 2,
+      "min_xp": 100,
+      "tier": "Bronze",
+      "file": "icons/avatar-frame-level-02.svg"
+    },
+    {
+      "level": 3,
+      "min_xp": 400,
+      "tier": "Bronze",
+      "file": "icons/avatar-frame-level-03.svg"
+    },
+    {
+      "level": 4,
+      "min_xp": 900,
+      "tier": "Bronze",
+      "file": "icons/avatar-frame-level-04.svg"
+    },
+    {
+      "level": 5,
+      "min_xp": 1600,
+      "tier": "Bronze",
+      "file": "icons/avatar-frame-level-05.svg"
+    },
+    {
+      "level": 6,
+      "min_xp": 2500,
+      "tier": "Bronze",
+      "file": "icons/avatar-frame-level-06.svg"
+    },
+    {
+      "level": 7,
+      "min_xp": 3600,
+      "tier": "Bronze",
+      "file": "icons/avatar-frame-level-07.svg"
+    },
+    {
+      "level": 8,
+      "min_xp": 4900,
+      "tier": "Bronze",
+      "file": "icons/avatar-frame-level-08.svg"
+    },
+    {
+      "level": 9,
+      "min_xp": 6400,
+      "tier": "Bronze",
+      "file": "icons/avatar-frame-level-09.svg"
+    },
+    {
+      "level": 10,
+      "min_xp": 8100,
+      "tier": "Bronze",
+      "file": "icons/avatar-frame-level-10.svg"
+    },
+    {
+      "level": 11,
+      "min_xp": 10000,
+      "tier": "Silver",
+      "file": "icons/avatar-frame-level-11.svg"
+    },
+    {
+      "level": 12,
+      "min_xp": 12100,
+      "tier": "Silver",
+      "file": "icons/avatar-frame-level-12.svg"
+    },
+    {
+      "level": 13,
+      "min_xp": 14400,
+      "tier": "Silver",
+      "file": "icons/avatar-frame-level-13.svg"
+    },
+    {
+      "level": 14,
+      "min_xp": 16900,
+      "tier": "Silver",
+      "file": "icons/avatar-frame-level-14.svg"
+    },
+    {
+      "level": 15,
+      "min_xp": 19600,
+      "tier": "Silver",
+      "file": "icons/avatar-frame-level-15.svg"
+    },
+    {
+      "level": 16,
+      "min_xp": 22500,
+      "tier": "Silver",
+      "file": "icons/avatar-frame-level-16.svg"
+    },
+    {
+      "level": 17,
+      "min_xp": 25600,
+      "tier": "Silver",
+      "file": "icons/avatar-frame-level-17.svg"
+    },
+    {
+      "level": 18,
+      "min_xp": 28900,
+      "tier": "Silver",
+      "file": "icons/avatar-frame-level-18.svg"
+    },
+    {
+      "level": 19,
+      "min_xp": 32400,
+      "tier": "Silver",
+      "file": "icons/avatar-frame-level-19.svg"
+    },
+    {
+      "level": 20,
+      "min_xp": 36100,
+      "tier": "Silver",
+      "file": "icons/avatar-frame-level-20.svg"
+    },
+    {
+      "level": 21,
+      "min_xp": 40000,
+      "tier": "Gold",
+      "file": "icons/avatar-frame-level-21.svg"
+    },
+    {
+      "level": 22,
+      "min_xp": 44100,
+      "tier": "Gold",
+      "file": "icons/avatar-frame-level-22.svg"
+    },
+    {
+      "level": 23,
+      "min_xp": 48400,
+      "tier": "Gold",
+      "file": "icons/avatar-frame-level-23.svg"
+    },
+    {
+      "level": 24,
+      "min_xp": 52900,
+      "tier": "Gold",
+      "file": "icons/avatar-frame-level-24.svg"
+    },
+    {
+      "level": 25,
+      "min_xp": 57600,
+      "tier": "Gold",
+      "file": "icons/avatar-frame-level-25.svg"
+    },
+    {
+      "level": 26,
+      "min_xp": 62500,
+      "tier": "Gold",
+      "file": "icons/avatar-frame-level-26.svg"
+    },
+    {
+      "level": 27,
+      "min_xp": 67600,
+      "tier": "Gold",
+      "file": "icons/avatar-frame-level-27.svg"
+    },
+    {
+      "level": 28,
+      "min_xp": 72900,
+      "tier": "Gold",
+      "file": "icons/avatar-frame-level-28.svg"
+    },
+    {
+      "level": 29,
+      "min_xp": 78400,
+      "tier": "Gold",
+      "file": "icons/avatar-frame-level-29.svg"
+    },
+    {
+      "level": 30,
+      "min_xp": 84100,
+      "tier": "Gold",
+      "file": "icons/avatar-frame-level-30.svg"
+    },
+    {
+      "level": 31,
+      "min_xp": 90000,
+      "tier": "Emerald",
+      "file": "icons/avatar-frame-level-31.svg"
+    },
+    {
+      "level": 32,
+      "min_xp": 96100,
+      "tier": "Emerald",
+      "file": "icons/avatar-frame-level-32.svg"
+    },
+    {
+      "level": 33,
+      "min_xp": 102400,
+      "tier": "Emerald",
+      "file": "icons/avatar-frame-level-33.svg"
+    },
+    {
+      "level": 34,
+      "min_xp": 108900,
+      "tier": "Emerald",
+      "file": "icons/avatar-frame-level-34.svg"
+    },
+    {
+      "level": 35,
+      "min_xp": 115600,
+      "tier": "Emerald",
+      "file": "icons/avatar-frame-level-35.svg"
+    },
+    {
+      "level": 36,
+      "min_xp": 122500,
+      "tier": "Emerald",
+      "file": "icons/avatar-frame-level-36.svg"
+    },
+    {
+      "level": 37,
+      "min_xp": 129600,
+      "tier": "Emerald",
+      "file": "icons/avatar-frame-level-37.svg"
+    },
+    {
+      "level": 38,
+      "min_xp": 136900,
+      "tier": "Emerald",
+      "file": "icons/avatar-frame-level-38.svg"
+    },
+    {
+      "level": 39,
+      "min_xp": 144400,
+      "tier": "Emerald",
+      "file": "icons/avatar-frame-level-39.svg"
+    },
+    {
+      "level": 40,
+      "min_xp": 152100,
+      "tier": "Emerald",
+      "file": "icons/avatar-frame-level-40.svg"
+    },
+    {
+      "level": 41,
+      "min_xp": 160000,
+      "tier": "Master",
+      "file": "icons/avatar-frame-level-41.svg"
+    },
+    {
+      "level": 42,
+      "min_xp": 168100,
+      "tier": "Master",
+      "file": "icons/avatar-frame-level-42.svg"
+    },
+    {
+      "level": 43,
+      "min_xp": 176400,
+      "tier": "Master",
+      "file": "icons/avatar-frame-level-43.svg"
+    },
+    {
+      "level": 44,
+      "min_xp": 184900,
+      "tier": "Master",
+      "file": "icons/avatar-frame-level-44.svg"
+    },
+    {
+      "level": 45,
+      "min_xp": 193600,
+      "tier": "Master",
+      "file": "icons/avatar-frame-level-45.svg"
+    },
+    {
+      "level": 46,
+      "min_xp": 202500,
+      "tier": "Master",
+      "file": "icons/avatar-frame-level-46.svg"
+    },
+    {
+      "level": 47,
+      "min_xp": 211600,
+      "tier": "Master",
+      "file": "icons/avatar-frame-level-47.svg"
+    },
+    {
+      "level": 48,
+      "min_xp": 220900,
+      "tier": "Master",
+      "file": "icons/avatar-frame-level-48.svg"
+    },
+    {
+      "level": 49,
+      "min_xp": 230400,
+      "tier": "Master",
+      "file": "icons/avatar-frame-level-49.svg"
+    },
+    {
+      "level": 50,
+      "min_xp": 240100,
+      "tier": "Master",
+      "file": "icons/avatar-frame-level-50.svg"
+    }
+  ]
+}

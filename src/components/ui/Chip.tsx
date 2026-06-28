@@ -1,54 +1,54 @@
-import React from "react";
-import { View, Text, StyleSheet } from "react-native";
-import { colors } from "../../theme/tokens";
+import React from 'react';
+import { View, Text } from 'react-native';
 
-type Tone = "green" | "primary" | "neutral";
+type Tone = 'green' | 'primary' | 'neutral';
+
+const toneBg: Record<Tone, string> = {
+  green: 'bg-green-50 border border-green-100',
+  primary: 'bg-primary-50 border border-primary-100',
+  neutral: 'bg-surface-muted border border-border',
+};
+
+const toneText: Record<Tone, string> = {
+  green: 'text-green-700',
+  primary: 'text-primary-700',
+  neutral: 'text-muted-foreground',
+};
 
 interface ChipProps {
-  children: React.ReactNode;
+  /** Label text. */
+  label?: string;
+  /** Children (text node) — alternative to label prop. */
+  children?: React.ReactNode;
   tone?: Tone;
-  icon?: string;
+  /** Optional icon rendered before the label. */
+  icon?: React.ReactNode;
+  className?: string;
 }
 
-export function Chip({ children, tone = "neutral", icon }: ChipProps) {
+export function Chip({
+  label,
+  children,
+  tone = 'green',
+  icon,
+  className = '',
+}: ChipProps) {
+  const content = label ?? children;
   return (
-    <View style={[styles.chip, styles[`tone_${tone}`]]}>
-      {icon && <Text style={styles.icon}>{icon}</Text>}
-      <Text style={[styles.text, styles[`text_${tone}`]]}>{children}</Text>
+    <View
+      className={`flex-row items-center gap-1 rounded-full px-3 py-1 ${toneBg[tone]} ${className}`.trim()}
+    >
+      {icon}
+      <Text className={`text-sm font-semibold ${toneText[tone]}`}>{content}</Text>
     </View>
   );
 }
 
+/** Small XP reward badge — e.g. "+50 XP". */
 export function XPBadge({ xp }: { xp: number }) {
   return (
-    <View style={styles.xpBadge}>
-      <Text style={styles.xpText}>+{xp} XP</Text>
+    <View className="flex-row items-center rounded-full border border-green-600 bg-green-400 px-2 py-0.5">
+      <Text className="text-xs font-bold text-white">+{xp} XP</Text>
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  chip: {
-    flexDirection: "row",
-    alignItems: "center",
-    gap: 4,
-    paddingHorizontal: 10,
-    paddingVertical: 4,
-    borderRadius: 999,
-  },
-  tone_green: { backgroundColor: colors.green[50] },
-  tone_primary: { backgroundColor: colors.primary[50] },
-  tone_neutral: { backgroundColor: colors.neutral[100] },
-  icon: { fontSize: 12 },
-  text: { fontSize: 12, fontWeight: "500" },
-  text_green: { color: colors.green[700] },
-  text_primary: { color: colors.primary[600] },
-  text_neutral: { color: colors.neutral[600] },
-  xpBadge: {
-    backgroundColor: colors.green[500],
-    paddingHorizontal: 10,
-    paddingVertical: 3,
-    borderRadius: 999,
-  },
-  xpText: { color: "#fff", fontSize: 12, fontWeight: "700" },
-});

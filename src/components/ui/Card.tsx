@@ -1,32 +1,37 @@
-import React from "react";
-import { View, StyleSheet, type ViewStyle } from "react-native";
-import { colors } from "../../theme/tokens";
+import React from 'react';
+import { View, type ViewProps } from 'react-native';
 
-interface CardProps {
-  children: React.ReactNode;
-  style?: ViewStyle;
-  padded?: boolean;
+interface CardProps extends ViewProps {
+  children?: React.ReactNode;
+  className?: string;
 }
 
-export function Card({ children, style, padded = true }: CardProps) {
+/** A themed card container with rounded corners, border, and shadow. */
+export function Card({ children, className = '', style, ...props }: CardProps) {
   return (
-    <View style={[styles.card, padded && styles.padded, style]}>
+    <View
+      className={`rounded-xl border border-border bg-surface p-4 shadow-card ${className}`.trim()}
+      style={style}
+      {...props}
+    >
       {children}
     </View>
   );
 }
 
-const styles = StyleSheet.create({
-  card: {
-    backgroundColor: "#fff",
-    borderRadius: 12,
-    shadowColor: colors.neutral[300],
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.15,
-    shadowRadius: 6,
-    elevation: 2,
-  },
-  padded: {
-    padding: 16,
-  },
-});
+/** A soft image placeholder used in place of real photos in this scaffold. */
+export function ImagePlaceholder({
+  label,
+  className = '',
+}: {
+  className?: string;
+  label?: React.ReactNode;
+}) {
+  return (
+    <View
+      className={`items-center justify-center rounded-lg border border-border bg-surface-muted ${className}`.trim()}
+    >
+      {label}
+    </View>
+  );
+}

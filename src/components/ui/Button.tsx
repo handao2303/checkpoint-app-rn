@@ -1,96 +1,125 @@
-import React from "react";
-import {
-  TouchableOpacity,
-  Text,
-  StyleSheet,
-  type ViewStyle,
-  type TextStyle,
-  ActivityIndicator,
-} from "react-native";
-import { colors } from "../../theme/tokens";
+import React from 'react';
+import { Pressable, Text, ActivityIndicator, type PressableProps } from 'react-native';
+import { LinearGradient } from 'expo-linear-gradient';
+import { gradients } from '../../theme/colors';
 
-type Variant = "primary" | "accent" | "green" | "outline" | "ghost";
-type Size = "sm" | "md" | "lg";
+type Variant = 'primary' | 'accent' | 'green' | 'outline' | 'ghost';
+type Size = 'sm' | 'md' | 'lg';
 
-interface ButtonProps {
+interface ButtonProps extends Omit<PressableProps, 'children'> {
   variant?: Variant;
   size?: Size;
-  onPress?: () => void;
-  disabled?: boolean;
+  /** Pill (fully rounded) — default for primary CTAs. */
+  pill?: boolean;
   loading?: boolean;
+  disabled?: boolean;
   icon?: React.ReactNode;
   children?: React.ReactNode;
-  style?: ViewStyle;
-  fullWidth?: boolean;
+  className?: string;
 }
 
-export function Button({
-  variant = "primary",
-  size = "md",
-  onPress,
-  disabled,
-  loading,
-  icon,
-  children,
-  style,
-  fullWidth,
-}: ButtonProps) {
-  const btnStyle: ViewStyle = {
-    ...styles.base,
-    ...styles[variant],
-    ...styles[`size_${size}` as keyof typeof styles],
-    ...(fullWidth ? styles.fullWidth : {}),
-    ...(disabled ? styles.disabled : {}),
-    ...style,
-  };
+const variantStyles: Record<Variant, string> = {
+  primary: 'bg-primary',
+  accent: 'bg-accent',
+  green: 'bg-green-600',
+  outline: 'border border-primary/45 bg-surface',
+  ghost: 'bg-transparent',
+};
 
-  const textStyle: TextStyle = {
-    ...styles.text,
-    ...(styles[`text_${variant}` as keyof typeof styles] as TextStyle),
-    ...(styles[`textSize_${size}` as keyof typeof styles] as TextStyle),
-    ...(disabled ? styles.textDisabled : {}),
-  };
+const variantTextStyles: Record<Variant, string> = {
+  primary: 'text-white font-display font-extrabold',
+  accent: 'text-white font-display font-extrabold',
+  green: 'text-white font-display font-extrabold',
+  outline: 'text-primary font-display font-extrabold',
+  ghost: 'text-foreground font-body',
+};
+
+const sizeStyles: Record<Size, string> = {
+  sm: 'px-4 py-2 rounded-lg',
+  md: 'px-5 py-3 rounded-xl',
+  lg: 'px-6 py-4 rounded-2xl',
+};
+
+const sizeTextStyles: Record<Size, string> = {
+  sm: 'text-sm',
+  md: 'text-base',
+  lg: 'text-lg',
+};
+
+export function Button({
+  children,
+  variant = 'primary',
+  size = 'md',
+  pill = false,
+  loading = false,
+  disabled = false,
+  icon,
+  onPress,
+  className = '',
+  ...rest
+}: ButtonProps) {
+  const rounded = pill ? 'rounded-full' : '';
+  const sizeClass = sizeStyles[size];
+  // Remove the rounded part from sizeClass when pill is true
+  const baseSize = pill
+    ? sizeClass.replace(/rounded-\w+/, '').trim()
+    : sizeClass;
+
+  const disabledClass = disabled || loading ? 'opacity-60' : '';
+
+  if (variant === 'primary' && !disabled) {
+    return (
+      <Pressable
+        onPress={onPress}
+        disabled={disabled || loading}
+        {...rest}
+      >
+        <LinearGradient
+          colors={[...gradients.primaryCTA]}
+          start={[0, 0]}
+          end={[1, 1]}
+          className={`items-center justify-center flex-row gap-2 ${baseSize} ${rounded} ${disabledClass} ${className}`.trim()}
+        >
+          {loading ? (
+            <ActivityIndicator color="white" />
+          ) : (
+            <>
+              {icon}
+              {typeof children === 'string' ? (
+                <Text className={`${variantTextStyles[variant]} ${sizeTextStyles[size]}`}>
+                  {children}
+                </Text>
+              ) : (
+                children
+              )}
+            </>
+          )}
+        </LinearGradient>
+      </Pressable>
+    );
+  }
 
   return (
-    <TouchableOpacity style={btnStyle} onPress={onPress} disabled={disabled || loading} activeOpacity={0.7}>
+    <Pressable
+      onPress={onPress}
+      disabled={disabled || loading}
+      className={`items-center justify-center flex-row gap-2 ${variantStyles[variant]} ${baseSize} ${rounded} ${disabledClass} ${className}`.trim()}
+      {...rest}
+    >
       {loading ? (
-        <ActivityIndicator color={variant === "outline" || variant === "ghost" ? colors.primary[500] : "#fff"} size="small" />
+        <ActivityIndicator color={variant === 'ghost' ? undefined : 'white'} />
       ) : (
         <>
           {icon}
-          {children ? <Text style={textStyle}>{children}</Text> : null}
+          {typeof children === 'string' ? (
+            <Text className={`${variantTextStyles[variant]} ${sizeTextStyles[size]}`}>
+              {children}
+            </Text>
+          ) : (
+            children
+          )}
         </>
       )}
-    </TouchableOpacity>
+    </Pressable>
   );
 }
-
-const styles = StyleSheet.create({
-  base: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "center",
-    borderRadius: 999,
-    gap: 6,
-  },
-  fullWidth: { width: "100%" },
-  disabled: { opacity: 0.5 },
-  primary: { backgroundColor: colors.primary[500] },
-  accent: { backgroundColor: colors.accent[500] },
-  green: { backgroundColor: colors.green[500] },
-  outline: { backgroundColor: "transparent", borderWidth: 1.5, borderColor: colors.primary[500] },
-  ghost: { backgroundColor: "transparent" },
-  size_sm: { paddingHorizontal: 12, paddingVertical: 6, minHeight: 32 },
-  size_md: { paddingHorizontal: 16, paddingVertical: 10, minHeight: 40 },
-  size_lg: { paddingHorizontal: 20, paddingVertical: 14, minHeight: 48 },
-  text: { fontWeight: "600", textAlign: "center" as const },
-  text_primary: { color: "#fff" },
-  text_accent: { color: "#fff" },
-  text_green: { color: "#fff" },
-  text_outline: { color: colors.primary[500] },
-  text_ghost: { color: colors.primary[500] },
-  textSize_sm: { fontSize: 13 },
-  textSize_md: { fontSize: 15 },
-  textSize_lg: { fontSize: 17 },
-  textDisabled: { opacity: 0.7 },
-});

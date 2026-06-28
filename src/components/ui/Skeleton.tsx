@@ -1,53 +1,50 @@
-import React, { useEffect, useRef } from "react";
-import { View, Animated, StyleSheet, type ViewStyle } from "react-native";
-import { colors } from "../../theme/tokens";
+import React, { useEffect } from 'react';
+import Animated, {
+  useSharedValue,
+  withRepeat,
+  withTiming,
+  useAnimatedStyle,
+} from 'react-native-reanimated';
 
-interface SkeletonProps {
-  width?: number | string;
-  height?: number;
-  borderRadius?: number;
-  style?: ViewStyle;
-}
-
-export function Skeleton({ width = "100%", height = 20, borderRadius = 4, style }: SkeletonProps) {
-  const opacity = useRef(new Animated.Value(0.3)).current;
+/** A theme-aware pulsing placeholder block. Compose with className for sizing. */
+export function Skeleton({ className = '' }: { className?: string }) {
+  const opacity = useSharedValue(1);
 
   useEffect(() => {
-    const anim = Animated.loop(
-      Animated.sequence([
-        Animated.timing(opacity, { toValue: 1, duration: 800, useNativeDriver: true }),
-        Animated.timing(opacity, { toValue: 0.3, duration: 800, useNativeDriver: true }),
-      ]),
-    );
-    anim.start();
-    return () => anim.stop();
+    opacity.value = withRepeat(withTiming(0.4, { duration: 800 }), -1, true);
   }, [opacity]);
+
+  const animatedStyle = useAnimatedStyle(() => ({
+    opacity: opacity.value,
+  }));
 
   return (
     <Animated.View
-      style={[
-        styles.skeleton,
-        { width: width as any, height, borderRadius, opacity },
-        style,
-      ]}
+      style={animatedStyle}
+      className={`bg-surface-muted rounded-lg ${className}`.trim()}
     />
   );
 }
 
+/** Shared loading state for place/checkpoint detail sheets. */
 export function DetailSheetSkeleton() {
   return (
-    <View style={{ gap: 12, padding: 16 }}>
-      <Skeleton height={200} borderRadius={12} />
-      <Skeleton height={24} width="60%" />
-      <Skeleton height={16} width="80%" />
-      <Skeleton height={100} />
-      <Skeleton height={16} width="40%" />
-    </View>
+    <Animated.View className="flex flex-col gap-3">
+      <Animated.View className="flex flex-row gap-2 overflow-hidden">
+        <Skeleton className="h-44 w-60 rounded-lg" />
+        <Skeleton className="h-44 w-60 rounded-lg" />
+      </Animated.View>
+      <Animated.View className="flex flex-row items-center gap-2">
+        <Skeleton className="h-8 w-8 rounded-full" />
+        <Skeleton className="h-6 w-40" />
+      </Animated.View>
+      <Skeleton className="h-4 w-24" />
+      <Skeleton className="h-4 w-full" />
+      <Skeleton className="h-4 w-3/4" />
+      <Animated.View className="flex flex-row items-center gap-2">
+        <Skeleton className="h-7 w-7 rounded-full" />
+        <Skeleton className="h-4 w-28" />
+      </Animated.View>
+    </Animated.View>
   );
 }
-
-const styles = StyleSheet.create({
-  skeleton: {
-    backgroundColor: colors.neutral[200],
-  },
-});
