@@ -29,6 +29,7 @@ import { useNavigation } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import type { RootStackParamList } from '../navigation/types';
 import { requestLocationPermission, getCurrentPosition } from '../lib/geo';
+import { ensureCameraPermission, ensureMediaLibraryPermission } from '../lib/mediaPermissions';
 import { CreateCheckpointForm } from '../components/CreateCheckpointForm';
 import { Icon } from '../components/ui/Icon';
 import { primary, light, neutral } from '../theme/colors';
@@ -96,8 +97,9 @@ export default function CreateScreen() {
   // ---- Photo picker ----
 
   const pickPhoto = useCallback(async () => {
+    if (!(await ensureMediaLibraryPermission())) return;
     const result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      mediaTypes: ['images'],
       allowsMultipleSelection: false,
       quality: 1,
       exif: true,
@@ -145,6 +147,7 @@ export default function CreateScreen() {
   }, []);
 
   const takePhotoWithCamera = useCallback(async () => {
+    if (!(await ensureCameraPermission())) return;
     const result = await ImagePicker.launchCameraAsync({
       quality: 1,
       exif: true,

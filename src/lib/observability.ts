@@ -1,8 +1,14 @@
 // Observability for the mobile app — Firebase Analytics + structured logging.
 // @react-native-firebase/analytics requires a native build (expo prebuild).
-// In Expo Go / bare JS, the analytics().logEvent() call is silently swallowed.
+// Uses the v22+ modular API (getAnalytics/logEvent) — the namespaced
+// analytics().logEvent() form is deprecated.
 
-import analytics from '@react-native-firebase/analytics';
+import {
+  getAnalytics,
+  logEvent,
+  setUserId,
+  setUserProperties,
+} from '@react-native-firebase/analytics';
 import type { User } from './api';
 
 type EventParam = string | number | boolean | null | undefined;
@@ -20,9 +26,9 @@ export function trackEvent(name: string, params: EventParams = {}): void {
     console.log('[analytics]', name, params);
   }
   // Fire-and-forget; errors are swallowed so analytics never crashes the app.
-  analytics()
-    .logEvent(name, params as Record<string, string | number | boolean>)
-    .catch(() => {});
+  logEvent(getAnalytics(), name, params as Record<string, string | number | boolean>).catch(
+    () => {},
+  );
 }
 
 export function trackError(error: unknown, context: EventParams = {}): void {
@@ -31,9 +37,11 @@ export function trackError(error: unknown, context: EventParams = {}): void {
   if (isDev()) {
     console.warn('[analytics:error]', name, message, context);
   }
-  analytics()
-    .logEvent('app_error', { error_name: name, error_message: message, ...context } as Record<string, string | number | boolean>)
-    .catch(() => {});
+  logEvent(getAnalytics(), 'app_error', {
+    error_name: name,
+    error_message: message,
+    ...context,
+  } as Record<string, string | number | boolean>).catch(() => {});
 }
 
 export function setObservabilityUser(user: User | null): void {
@@ -46,10 +54,9 @@ export function setObservabilityUser(user: User | null): void {
   if (isDev()) {
     console.log('[analytics:user]', currentUserId, currentAuthState);
   }
-  analytics().setUserId(currentUserId).catch(() => {});
-  analytics()
-    .setUserProperties({ auth_state: currentAuthState })
-    .catch(() => {});
+  const a = getAnalytics();
+  setUserId(a, currentUserId).catch(() => {});
+  setUserProperties(a, { auth_state: currentAuthState }).catch(() => {});
 }
 
 export { currentUserId, currentAuthState };

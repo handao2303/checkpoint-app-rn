@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect, useMemo, useRef } from 'react';
 import BottomSheet, {
   BottomSheetView,
+  BottomSheetScrollView,
   BottomSheetBackdrop,
   type BottomSheetBackdropProps,
 } from '@gorhom/bottom-sheet';
@@ -10,6 +11,8 @@ interface SheetProps {
   onClose: () => void;
   children: React.ReactNode;
   snapPoints?: (string | number)[];
+  /** Render content in a BottomSheetScrollView for long, scrollable detail. */
+  scrollable?: boolean;
 }
 
 export function Sheet({
@@ -17,6 +20,7 @@ export function Sheet({
   onClose,
   children,
   snapPoints = ['50%', '90%'],
+  scrollable = false,
 }: SheetProps) {
   const bottomSheetRef = useRef<BottomSheet>(null);
   const snapPointsMemo = useMemo(() => snapPoints, [snapPoints]);
@@ -34,7 +38,9 @@ export function Sheet({
 
   useEffect(() => {
     if (open) {
-      bottomSheetRef.current?.expand();
+      // Open at the FIRST (smallest) snap point — not expand(), which jumps to
+      // the tallest. Content scrolls inside and the user can drag up for more.
+      bottomSheetRef.current?.snapToIndex(0);
     } else {
       bottomSheetRef.current?.close();
     }
@@ -45,6 +51,7 @@ export function Sheet({
       ref={bottomSheetRef}
       index={-1}
       snapPoints={snapPointsMemo}
+      enableDynamicSizing={false}
       enablePanDownToClose
       onClose={onClose}
       backdropComponent={renderBackdrop}
@@ -55,7 +62,13 @@ export function Sheet({
         borderTopRightRadius: 28,
       }}
     >
-      <BottomSheetView>{children}</BottomSheetView>
+      {scrollable ? (
+        <BottomSheetScrollView showsVerticalScrollIndicator={false}>
+          {children}
+        </BottomSheetScrollView>
+      ) : (
+        <BottomSheetView>{children}</BottomSheetView>
+      )}
     </BottomSheet>
   );
 }

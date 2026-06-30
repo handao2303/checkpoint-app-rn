@@ -1,10 +1,39 @@
 import React from 'react';
-import { Pressable, Text, ActivityIndicator, type PressableProps } from 'react-native';
+import {
+  Pressable,
+  Text,
+  ActivityIndicator,
+  type PressableProps,
+  type ViewStyle,
+} from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { gradients } from '../../theme/colors';
 
 type Variant = 'primary' | 'accent' | 'green' | 'outline' | 'ghost';
 type Size = 'sm' | 'md' | 'lg';
+
+// Padding / radius per size — mirrors the web Tailwind scale
+// (px-4/py-2, px-5/py-3, px-6/py-4 and rounded-lg/xl/2xl).
+const SIZE_PADDING: Record<Size, { paddingHorizontal: number; paddingVertical: number }> = {
+  sm: { paddingHorizontal: 16, paddingVertical: 8 },
+  md: { paddingHorizontal: 20, paddingVertical: 12 },
+  lg: { paddingHorizontal: 24, paddingVertical: 16 },
+};
+const SIZE_RADIUS: Record<Size, number> = { sm: 8, md: 12, lg: 16 };
+
+// Layout for the gradient surface. Applied via `style` (NOT className) because
+// NativeWind does not process className on the third-party LinearGradient.
+function gradientLayout(size: Size, pill: boolean, loading: boolean): ViewStyle {
+  return {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 8,
+    ...SIZE_PADDING[size],
+    borderRadius: pill ? 999 : SIZE_RADIUS[size],
+    opacity: loading ? 0.6 : 1,
+  };
+}
 
 interface ButtonProps extends Omit<PressableProps, 'children'> {
   variant?: Variant;
@@ -72,13 +101,14 @@ export function Button({
       <Pressable
         onPress={onPress}
         disabled={disabled || loading}
+        className={className}
         {...rest}
       >
         <LinearGradient
           colors={[...gradients.primaryCTA]}
           start={[0, 0]}
           end={[1, 1]}
-          className={`items-center justify-center flex-row gap-2 ${baseSize} ${rounded} ${disabledClass} ${className}`.trim()}
+          style={gradientLayout(size, pill, loading)}
         >
           {loading ? (
             <ActivityIndicator color="white" />

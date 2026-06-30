@@ -23,6 +23,7 @@ import {
   StyleSheet,
 } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
+import { ensureCameraPermission, ensureMediaLibraryPermission } from '../lib/mediaPermissions';
 import { useCheckin, type CheckinFormData } from '../hooks/useCheckin';
 import { Button } from './ui/Button';
 import { Icon } from './ui/Icon';
@@ -87,8 +88,9 @@ export function CreateCheckpointForm({
 
   const pickFromGallery = useCallback(async () => {
     if (mediaUris.length >= MAX_IMAGES) return;
+    if (!(await ensureMediaLibraryPermission())) return;
     const result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      mediaTypes: ['images'],
       allowsMultipleSelection: true,
       quality: 1,
       exif: false,
@@ -103,6 +105,7 @@ export function CreateCheckpointForm({
 
   const takePhoto = useCallback(async () => {
     if (mediaUris.length >= MAX_IMAGES) return;
+    if (!(await ensureCameraPermission())) return;
     const result = await ImagePicker.launchCameraAsync({ quality: 1, exif: false });
     if (!result.canceled) {
       setMediaUris((prev) => [...prev, result.assets[0].uri]);

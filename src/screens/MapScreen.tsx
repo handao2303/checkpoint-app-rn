@@ -22,9 +22,12 @@ import {
   Text,
   Pressable,
   Image,
-  ScrollView,
+  Animated,
+  Easing,
+  Dimensions,
   StyleSheet,
 } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import {
   Map,
   Camera,
@@ -33,7 +36,7 @@ import {
   type MapRef,
   type CameraRef,
 } from '@maplibre/maplibre-react-native';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, keepPreviousData } from '@tanstack/react-query';
 import { useNavigation } from '@react-navigation/native';
 import type { BottomTabNavigationProp } from '@react-navigation/bottom-tabs';
 import { useTranslation } from 'react-i18next';
@@ -86,6 +89,7 @@ export default function MapScreen() {
   const { coords } = useUserLocation();
   const { user } = useAuth();
   const { requireAuth } = useAuthGate();
+  const insets = useSafeAreaInsets();
 
   const [mapFilter, setMapFilter] = useState<MapFilter>('all');
   const [categoryFilter, setCategoryFilter] = useState<CategoryFilter>('all');
@@ -117,7 +121,10 @@ export default function MapScreen() {
   }, [coords]);
 
   // Server-side filtering (category + mine/following) is part of the query key.
-  const { data: checkpoints } = useQuery({
+  // `keepPreviousData` keeps the current markers on screen while the next
+  // viewport/filter fetches — we only re-render once new data arrives (no
+  // flicker / empty map), matching the web behaviour.
+  const { data: checkpoints, isFetching } = useQuery({
     queryKey: ['checkpoints', 'bounds', bounds, mapFilter, categoryFilter],
     queryFn: () =>
       bounds
@@ -127,7 +134,7 @@ export default function MapScreen() {
           })
         : Promise.resolve([]),
     enabled: !!bounds,
-    gcTime: 0,
+    placeholderData: keepPreviousData,
   });
 
   // v11 getBounds() returns [west, south, east, north]; getZoom() the level.
@@ -174,21 +181,16 @@ export default function MapScreen() {
   }, [checkpoints, bounds, zoom]);
 
   const handleClusterPress = useCallback(
-    (clusterId: number, lng: number, lat: number) => {
-      // Zoom in until the cluster expands; if we are already deep, list its
-      // leaves in a bottom sheet (parity with the web ClusterSheet).
-      const expansionZoom = Math.min(sc.getClusterExpansionZoom(clusterId), 18);
-      if (expansionZoom > zoom + 0.5 && expansionZoom <= CLUSTER_MAX_ZOOM) {
-        cameraRef.current?.flyTo({ center: [lng, lat], zoom: expansionZoom, duration: 400 });
-        return;
-      }
+    (clusterId: number) => {
+      // Tapping a cluster opens its checkpoints in a bottom sheet (parity with
+      // the web ClusterSheet) — it does NOT zoom in.
       const leaves = sc.getLeaves(clusterId, Infinity) as Array<{
         properties: Checkpoint;
       }>;
       setClusterLeaves(leaves.map((l) => l.properties));
       trackEvent('map_cluster_open', { count: leaves.length });
     },
-    [sc, zoom],
+    [sc],
   );
 
   const selectCategory = useCallback((next: CategoryFilter) => {
@@ -253,7 +255,7 @@ export default function MapScreen() {
                 id={`cluster-${clusterId}`}
                 lngLat={[lng, lat]}
                 anchor="center"
-                onPress={() => handleClusterPress(clusterId, lng, lat)}
+                onPress={() => handleClusterPress(clusterId)}
               >
                 <View style={[styles.clusterWrap, { width: thumbs.length >= 2 ? 52 : 36 }]}>
                   {thumbs[1] ? (
@@ -306,6 +308,9 @@ export default function MapScreen() {
           );
         })}
       </Map>
+
+      {/* Loading progress bar (top) — shown while fetching, like the web map */}
+      {isFetching ? <MapFetchProgress top={insets.top} /> : null}
 
       {/* Category filter — floating button + expanding menu, top-left */}
       <View style={styles.categoryControl} pointerEvents="box-none">
@@ -385,18 +390,19 @@ export default function MapScreen() {
         </Button>
       </View>
 
-      {/* Cluster list bottom sheet */}
+      {/* Cluster list bottom sheet — scrollable, capped at 90% height */}
       <Sheet
         open={!!clusterLeaves}
         onClose={() => setClusterLeaves(null)}
-        snapPoints={['45%', '75%']}
+        snapPoints={['50%', '90%']}
+        scrollable
       >
         <View style={styles.clusterSheetHeader}>
           <Text style={styles.clusterSheetTitle}>
             {t('so_dia_diem', { count: clusterLeaves?.length ?? 0 })}
           </Text>
         </View>
-        <ScrollView contentContainerStyle={styles.clusterSheetList}>
+        <View style={styles.clusterSheetList}>
           {clusterLeaves?.map((cp) => (
             <Pressable
               key={cp.id}
@@ -420,7 +426,7 @@ export default function MapScreen() {
                 <View style={styles.clusterRowMeta}>
                   {cp.rating != null ? (
                     <View style={styles.metaItem}>
-                      <Icon name="star" size={12} color={status.gold} />
+                      <Icon name="star" size={12} color={status.gold} fill={status.gold} />
                       <Text style={styles.metaText}>{cp.rating}/5</Text>
                     </View>
                   ) : cp.address ? (
@@ -436,7 +442,7 @@ export default function MapScreen() {
               </View>
             </Pressable>
           ))}
-        </ScrollView>
+        </View>
       </Sheet>
 
       {/* Checkpoint detail bottom sheet */}
@@ -469,7 +475,11 @@ const styles = StyleSheet.create({
   },
   photoMarkerImg: { width: '100%', height: '100%' },
   playOverlay: {
-    ...StyleSheet.absoluteFillObject,
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
     alignItems: 'center',
     justifyContent: 'center',
     backgroundColor: 'rgba(0,0,0,0.25)',

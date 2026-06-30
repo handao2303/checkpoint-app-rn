@@ -100,7 +100,7 @@ export function EditProfileSheet({ open, onClose }: EditProfileSheetProps) {
       return;
     }
     const result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      mediaTypes: ['images'],
       allowsEditing: true,   // built-in square crop
       aspect: [1, 1],
       quality: 0.9,

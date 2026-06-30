@@ -9,13 +9,23 @@ interface IconProps {
   size?: number;
   color?: string;
   strokeWidth?: number;
+  /** Fill the glyph (web equivalent of a `fill-*` class). Defaults to "none". */
+  fill?: string;
 }
 
 /**
  * Self-hosted SVG icon. Renders a glyph from the local registry inside a shared
  * 24x24 Svg wrapper. Pass `color` as a hex or named color string (e.g. "#F05A28").
+ * Pass `fill` to fill an outline glyph (e.g. a solid star), mirroring the web
+ * `fill-*` utility.
  */
-export function Icon({ name, size = 24, color = '#000000', strokeWidth = 2.2 }: IconProps) {
+export function Icon({
+  name,
+  size = 24,
+  color = '#000000',
+  strokeWidth = 2.2,
+  fill = 'none',
+}: IconProps) {
   const paths = iconPaths[name];
   if (!paths) return null;
   return (
@@ -23,7 +33,7 @@ export function Icon({ name, size = 24, color = '#000000', strokeWidth = 2.2 }: 
       width={size}
       height={size}
       viewBox="0 0 24 24"
-      fill="none"
+      fill={fill}
       stroke={color}
       strokeWidth={strokeWidth}
       strokeLinecap="round"

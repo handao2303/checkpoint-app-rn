@@ -67,6 +67,12 @@
           }
         }
       ],
+      [
+        "./plugins/withAndroidAbiFilter",
+        {
+          "abis": "arm64-v8a"
+        }
+      ],
       "expo-status-bar",
       "expo-secure-store",
       [

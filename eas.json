@@ -1,20 +1,45 @@
 {
   "cli": {
-    "version": ">= 5.0.0"
+    "version": ">= 5.0.0",
+    "appVersionSource": "remote"
   },
   "build": {
     "development": {
       "developmentClient": true,
-      "distribution": "internal"
+      "distribution": "internal",
+      "env": {
+        "EXPO_PUBLIC_API_URL": "https://api.checkpoint-app.space",
+        "EXPO_PUBLIC_SUPABASE_URL": "https://zngdcfoeklogvjphhjkp.supabase.co",
+        "EXPO_PUBLIC_SUPABASE_ANON_KEY": "sb_publishable_FLvDBG46h-xJho_O4ImZXQ_3Ec5O3eD",
+        "EXPO_PUBLIC_FIREBASE_API_KEY": "AIzaSyAICGsC8N0bhuGlMSzzw4XPQMz4mvGplhQ",
+        "EXPO_PUBLIC_FIREBASE_PROJECT_ID": "checkpoint-app-203e6",
+        "EXPO_PUBLIC_FIREBASE_APP_ID": "1:635339767605:web:d4f628c0bec6fcae19567c"
+      }
     },
     "preview": {
       "distribution": "internal",
       "android": {
         "buildType": "apk"
+      },
+      "env": {
+        "EXPO_PUBLIC_API_URL": "https://api.checkpoint-app.space",
+        "EXPO_PUBLIC_SUPABASE_URL": "https://zngdcfoeklogvjphhjkp.supabase.co",
+        "EXPO_PUBLIC_SUPABASE_ANON_KEY": "sb_publishable_FLvDBG46h-xJho_O4ImZXQ_3Ec5O3eD",
+        "EXPO_PUBLIC_FIREBASE_API_KEY": "AIzaSyAICGsC8N0bhuGlMSzzw4XPQMz4mvGplhQ",
+        "EXPO_PUBLIC_FIREBASE_PROJECT_ID": "checkpoint-app-203e6",
+        "EXPO_PUBLIC_FIREBASE_APP_ID": "1:635339767605:web:d4f628c0bec6fcae19567c"
       }
     },
     "production": {
-      "autoIncrement": true
+      "autoIncrement": true,
+      "env": {
+        "EXPO_PUBLIC_API_URL": "https://api.checkpoint-app.space",
+        "EXPO_PUBLIC_SUPABASE_URL": "https://zngdcfoeklogvjphhjkp.supabase.co",
+        "EXPO_PUBLIC_SUPABASE_ANON_KEY": "sb_publishable_FLvDBG46h-xJho_O4ImZXQ_3Ec5O3eD",
+        "EXPO_PUBLIC_FIREBASE_API_KEY": "AIzaSyAICGsC8N0bhuGlMSzzw4XPQMz4mvGplhQ",
+        "EXPO_PUBLIC_FIREBASE_PROJECT_ID": "checkpoint-app-203e6",
+        "EXPO_PUBLIC_FIREBASE_APP_ID": "1:635339767605:web:d4f628c0bec6fcae19567c"
+      }
     }
   },
   "submit": {

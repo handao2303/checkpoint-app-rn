@@ -320,7 +320,6 @@ export default function DiscoverScreen() {
         data={places}
         renderItem={renderItem}
         keyExtractor={(item) => item.id}
-        estimatedItemSize={88}
         ListHeaderComponent={renderHeader}
         ListEmptyComponent={<EmptyState />}
         ListFooterComponent={
